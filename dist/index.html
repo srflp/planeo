@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PUT Calendar</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+        <style>
+            input[readonly].flatpickr {
+                background-color: white;
+            }
+        </style>
+    </head>
+    <body class="py-4">
+
+        <div class="container">
+            <!--Guide-->
+            <h1>PUT Calendar Importer</h1>
+            <p>Pozwala w prosty sposób dodać plan zajęć do Kalendarza Google. (5 minut przepisywania zamiast 45 minut męczenia się z Kalendarzem)</p>
+            <p></p>
+            <ol class="mb-5">
+                <li>Zaloguj się do swojego konta Google do którego chcesz zaimportować kalendarz.</li>
+                <li>Wprowadź nazwę pod jaką zostanie stworzony kalendarz i uzupełnij formularz na podstawie planu zajęć.</li>
+                <li>Kliknij „Importuj”. </li>
+                <li>Gotowe, plan został dodany do Twojego Kalendarza Google.</li>
+            </ol>
+
+            <!--Log-in button-->
+            <div class="text-center">
+                <button id="authorize_button" class="btn btn-dark mx-auto d-none mb-4">Zaloguj się do Kalendarza Google</button>
+            </div>
+            <!--Logged-in user info-box-->
+            <div id="user_info" class="d-none justify-content-center mb-4"> <!--d-flex when shown-->
+                <div class="alert alert-secondary shadow-sm">
+                    <div class="row">
+                        <div id="logged_in_as" class="ml-2 mr-2"></div>
+                        <a id="signout_button" href="" class="ml-2 mr-2 text-secondary">wyloguj się</a>
+                    </div>
+                </div>
+            </div>
+
+            <!--Form-->
+            <form id="main_form" novalidate>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group d-flex">
+                            <label for="calendar_name" class="col-form-label text-nowrap">Nazwa kalendarza:</label>
+                            <div class="d-flex flex-column flex-grow-1 ml-1">
+                                <input id="calendar_name" type="text" class="form-control" placeholder="np. „Studia 2. semestr”" required disabled>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-6 mb-2">
+                        <div class="row">
+                            <legend class="col text-center">Czas trwania I. połowy semestru</legend>
+                        </div>
+                        <div class="form-row">
+                            <input id="first_half" type="text" class="form-control flatpickr" placeholder="przedział czasowy" required disabled>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb-2">
+                        <div class="row">
+                            <legend class="col text-center">Czas trwania II. połowy semestru</legend>
+                        </div>
+                        <div class="form-row">
+                            <input id="second_half" type="text" class="form-control flatpickr" placeholder="przedział czasowy" required disabled>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group row mt-1">
+                    <div class="col">
+                        <div class="row">
+                            <label class="col">Pierwszy tydzień, w którym odbywają się Twoje zajęcia, jest tygodniem:</label>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input name="first_week_is" value="parzysty" type="radio" id="even_week" class="custom-control-input" checked disabled>
+                                    <label class="custom-control-label" for="even_week">parzystym</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input name="first_week_is" value="nieparzysty" type="radio" id="odd_week" class="custom-control-input" disabled>
+                                    <label class="custom-control-label" for="odd_week">nieparzystym</label>
+                                    <div class="invalid-feedback ml-2"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="form-group row mt-1">
+                    <div class="col">
+                        <div class="row">
+                            <legend class="col text-center">Dni wolne od zajęć</legend>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Data</th>
+                                        <th scope="col" class="text-nowrap">Nazwa święta</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="holiday_list">
+                                    <tr class="holiday">
+                                        <td>(puste)</td>
+                                        <td>(puste)</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr id="holiday_form">
+                                    <td colspan="3" class="px-0">
+                                        <div class="row">
+                                            <div class="col-md-4 col-sm-6 pr-sm-1">
+                                                <input id="holiday_date" type="text" class="form-control flatpickr" placeholder="data lub przedział czasowy" disabled>
+                                            </div>
+                                            <div class="col-md-8 col-sm-6 mt-1 mt-sm-0 pl-sm-0">
+                                                <div class="input-group">
+                                                    <input id="holiday_name" type="text" class="form-control" placeholder="nazwa święta" disabled>
+                                                    <div class="input-group-append">
+                                                        <button id="add_holiday" class="btn btn-primary" type="button" disabled>Dodaj</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group row mt-1">
+                    <div id="lesson_container" class="col">
+                        <div class="row">
+                            <legend class="col text-center">Plan zajęć</legend>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Dzień</th>
+                                        <th scope="col">Godzina</th>
+                                        <th scope="col">Tygodnie</th>
+                                        <th scope="col">Typ</th>
+                                        <th scope="col">Przedmiot</th>
+                                        <th scope="col">Sala</th>
+                                        <th scope="col">Prowadzący</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lesson_list">
+                                    <tr class="lesson">
+                                        <td>(puste)</td>
+                                        <td>(puste)</td>
+                                        <td>(puste)</td>
+                                        <td>(puste)</td>
+                                        <td>(puste)</td>
+                                        <td>(puste)</td>
+                                        <td>(puste)</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr id="lesson_form">
+                                    <td colspan="6" class="px-0">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-3 col-6 pr-1 mb-1 mb-md-0">
+                                                <select id="lesson_weekday" class="custom-select" disabled>
+                                                    <option value="poniedziałek" selected>poniedziałek</option>
+                                                    <option value="wtorek">wtorek</option>
+                                                    <option value="środa">środa</option>
+                                                    <option value="czwartek">czwartek</option>
+                                                    <option value="piątek">piątek</option>
+                                                    <option value="sobota">sobota</option>
+                                                    <option value="niedziela">niedziela</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 col-6 pr-md-1">
+                                                <select id="lesson_hour" class="custom-select" disabled>
+                                                    <option value="08:00 – 09:30" selected>08:00 – 09:30</option>
+                                                    <option value="09:45 – 11:15">09:45 – 11:15</option>
+                                                    <option value="11:45 – 13:15">11:45 – 13:15</option>
+                                                    <option value="13:30 – 15:00">13:30 – 15:00</option>
+                                                    <option value="15:10 – 16:40">15:10 – 16:40</option>
+                                                    <option value="16:50 – 18:20">16:50 – 18:20</option>
+                                                    <option value="18:30 – 20:00">18:30 – 20:00</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 col-6 pr-1">
+                                                <select id="lesson_week" class="custom-select" disabled>
+                                                    <option value="wszystkie" selected>wszystkie</option>
+                                                    <option value="nieparzyste">nieparzyste</option>
+                                                    <option value="parzyste">parzyste</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 col-6">
+                                                <select id="lesson_type" class="custom-select" disabled>
+                                                    <option value="-" selected>-</option>
+                                                    <option value="wykł.">wykł.</option>
+                                                    <option value="ćw.">ćw.</option>
+                                                    <option value="lab.">lab.</option>
+                                                    <option value="lek.">lek.</option>
+                                                    <option value="sem.">sem.</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mt-1 pr-md-1">
+                                                <input id="lesson_name" type="text" class="form-control" placeholder="przedmiot" disabled>
+                                            </div>
+                                            <div class="col-md-3 mt-1 pr-md-1">
+                                                <input id="lesson_room" type="text" class="form-control" placeholder="sala" disabled>
+                                            </div>
+                                            <div class="col-md-5 mt-1">
+                                                <div class="input-group">
+                                                    <input id="lesson_lecturer" type="text" class="form-control" placeholder="prowadzący" disabled>
+                                                    <div class="input-group-append">
+                                                        <button id="add_lesson" class="btn btn-primary" type="button" disabled>Dodaj</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group row">
+                    <div class="col-sm-12 clearfix">
+<!--                        <button id="export_to_json" class="btn btn-outline-success float-left">Eksportuj do pliku .json</button>-->
+                        <button id="save" class="btn btn-outline-secondary float-left" disabled>Zapisz</button>
+                        <button id="load" class="btn btn-outline-secondary float-left" disabled>Wczytaj</button>
+                        <button id="add_calendar" class="btn btn-success float-right" disabled>Dodaj kalendarz do Kalendarza Google</button>
+                    </div>
+                </div>
+            </form>
+
+            <!--Status info-box-->
+            <div id="status_box" class="d-none justify-content-center"> <!--d-flex when shown-->
+                <div class="alert alert-secondary">
+                    <div class="row">
+                        <div id="status_spinner" class="spinner-border mx-2" role="status"></div>
+                        <div id="status_box_content" class="align-self-center mx-2"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script src="main.js"></script>
+    </body>
+</html>
