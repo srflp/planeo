@@ -1,5 +1,5 @@
 import loadjs from 'loadjs';
-import {onLogin} from './core.js';
+import {onLogin} from './main.js';
 import DatePickers from "./components/DatePickers";
 
 loadjs(['https://apis.google.com/js/api.js'], 'gapi');
