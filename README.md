@@ -27,7 +27,7 @@ After you fill out the form and submit it, the data you typed in is preprocessed
 // TODO
 
 ## Technical details
-The project was entirely written in plain JavaScript, without the use of any JS frameworks.
+The entire project was written in plain JavaScript, without the use of any JS frameworks.
 
 ### Dependencies
 #### Development side
