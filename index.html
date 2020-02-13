@@ -4,11 +4,26 @@
         <title>planeo</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+        <link href="https://fonts.googleapis.com/css?family=Sniglet|Roboto&display=swap" rel="stylesheet">
         <style>
+            h1 {
+                font-family: 'Sniglet', sans-serif;
+            }
+            body {
+                font-family: 'Roboto', sans-serif;
+            }
+            #upload_box {
+                border-style: dashed;
+                cursor: pointer;
+                user-select: none;
+            }
             input[readonly].flatpickr {
                 background-color: white;
             }
@@ -24,7 +39,7 @@
                 <li>Zaloguj się do swojego konta Google.</li>
                 <li>Wprowadź nazwę pod jaką zostanie utworzony kalendarz.</li>
                 <li>Uzupełnij formularz na podstawie planu zajęć, spisu tygodni i harmonogramu semestru.</li>
-                <li>Kliknij „Importuj”.</li>
+                <li>Kliknij „Dodaj do Kalendarza Google”.</li>
                 <li>Gotowe, plan został dodany do Twojego Kalendarza Google</li>
             </ol>
 
@@ -44,11 +59,20 @@
 
             <!--Form-->
             <form id="main_form" novalidate>
+                <div id="upload_box" class="card bg-white mb-3">
+                    <div class="card-body">
+                        <input type="file" class="d-none" id="json_input">
+                        <p id="upload_text" class="card-text text-muted">Jeśli posiadasz zapis planu zajęć w formacie .json, kliknij tu lub upuść go tutaj.</p>
+                    </div>
+                </div>
+
+                <hr class="mb-4">
+
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 mt-2">
                         <div class="form-group d-flex">
                             <label for="calendar_name" class="col-form-label text-nowrap">Nazwa kalendarza:</label>
-                            <div class="d-flex flex-column flex-grow-1 ml-1">
+                            <div class="d-flex flex-column flex-grow-1 ml-2">
                                 <input id="calendar_name" type="text" class="form-control" placeholder="np. „Studia 2. semestr”" required disabled>
                                 <div class="invalid-feedback"></div>
                             </div>
@@ -250,14 +274,25 @@
                     </div>
                 </div>
                 <hr>
-                <div class="form-group row">
-                    <div class="col-sm-12 clearfix">
-<!--                        <button id="export_to_json" class="btn btn-outline-success float-left">Eksportuj do pliku .json</button>-->
-                        <button id="save" class="btn btn-outline-secondary float-left" disabled>Zapisz</button>
-                        <button id="load" class="btn btn-outline-secondary float-left" disabled>Wczytaj</button>
-                        <button id="add_calendar" class="btn btn-success float-right" disabled>Dodaj kalendarz do Kalendarza Google</button>
+                <div class="form-group row text-center">
+                    <div class="col-sm-12">
+                        <button id="add_calendar" class="btn btn-success btn-lg" disabled>Dodaj do Kalendarza Google</button>
                     </div>
                 </div>
+                <hr>
+                <div class="form-group row">
+                    <div class="col">
+                        <p class="text-center text-sm-left text-muted">Inne opcje:</p>
+                    </div>
+                    <div class="col-sm-12">
+                        <button id="save" class="btn btn-outline-secondary" disabled>Zapisz postęp w przeglądarce</button>
+                        <button id="load" class="btn btn-outline-secondary" disabled>Wczytaj</button>
+                    </div>
+                    <div class="col-sm-12 mt-1">
+                        <button id="export_to_json" class="btn btn-outline-secondary" disabled>Eksportuj do pliku .json</button>
+                    </div>
+                </div>
+
             </form>
 
             <!--Status info-box-->
