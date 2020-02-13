@@ -2,12 +2,14 @@ import loadjs from 'loadjs';
 import GoogleAPI from "./authorization";
 import HolidayList from "./components/HolidayList";
 import LessonList from "./components/LessonList";
+import FileUpload from "./components/FileUpload";
 import DatePickers from "./components/DatePickers";
+import {downloadObjectAsJson} from "./helpers";
 
 loadjs.ready('gapi', function () {
     const googleApi = new GoogleAPI();
     googleApi.init();
-    console.log(gapi);
+    // console.log(gapi);
 });
 
 // GLOBAL VARIABLES
@@ -48,6 +50,7 @@ class Form {
         this.firstHalf = document.querySelector('#first_half');
         this.secondHalf = document.querySelector('#second_half');
         // this.calendarList = this.initializeCalendars();
+        FileUpload.initialize(this);
         DatePickers.initialize();
         this.disableEnter();
         this.holidayList = new HolidayList(DatePickers.list);
@@ -56,6 +59,7 @@ class Form {
         this.addAddCalendarButtonEventListener();
         this.addSaveButtonEventListener();
         this.addLoadButtonEventListener();
+        this.addExportToJsonEventListener();
     }
 
 
@@ -87,9 +91,10 @@ class Form {
             }
             if (consent) {
                 localStorage.setItem('appState', JSON.stringify(this.getData()));
+                const previousText = saveButton.innerText;
                 saveButton.innerText = 'Zapisano!';
                 window.setTimeout(() => {
-                    saveButton.innerText = 'Zapisz';
+                    saveButton.innerText = previousText;
                 }, 1000);
             }
         });
@@ -102,18 +107,7 @@ class Form {
             const appState = localStorage.getItem('appState');
             if (appState !== null) {
                 const appStateObj = JSON.parse(appState);
-                this.calendarName.value = appStateObj.calendarName;
-                this.firstWeekIs.value = appStateObj.firstWeekIs;
-                if (appStateObj.firstWeekIs === 'parzysty') {
-                    document.querySelector('#even_week').checked = true;
-                } else {
-                    document.querySelector('#odd_week').checked = true;
-                }
-                this.firstHalf.value = appStateObj.firstHalf;
-                this.secondHalf.value = appStateObj.secondHalf;
-                this.holidayList.restoreFromList(appStateObj.holidays);
-                this.lessonList.restoreFromList(appStateObj.lessons);
-
+                this.load(appStateObj);
                 loadButton.innerText = 'Wczytano!';
                 window.setTimeout(() => {
                     loadButton.innerText = 'Wczytaj';
@@ -125,6 +119,29 @@ class Form {
                 }, 1000);
             }
         });
+    }
+
+    load(formObj) {
+        this.calendarName.value = formObj.calendarName;
+        this.firstWeekIs.value = formObj.firstWeekIs;
+        if (formObj.firstWeekIs === 'parzysty') {
+            document.querySelector('#even_week').checked = true;
+        } else {
+            document.querySelector('#odd_week').checked = true;
+        }
+        this.firstHalf.value = formObj.firstHalf;
+        this.secondHalf.value = formObj.secondHalf;
+        this.holidayList.restoreFromList(formObj.holidays);
+        this.lessonList.restoreFromList(formObj.lessons);
+    }
+
+    addExportToJsonEventListener() {
+        const exportButton = document.querySelector('#export_to_json');
+        exportButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const data = this.getData();
+            downloadObjectAsJson(data, data.calendarName || 'nienazwany');
+        })
     }
 
     getData() {

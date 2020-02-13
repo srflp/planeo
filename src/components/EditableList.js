@@ -1,5 +1,5 @@
 import flatpickr from "flatpickr";
-import {htmlToElement} from "../helpers";
+import {flatpickrDateSort, htmlToElement} from "../helpers";
 
 export default class EditableList {
     constructor(calendarList, config) {
@@ -21,7 +21,11 @@ export default class EditableList {
     }
 
     get data() {
-        return this.list;
+        const returnList = this.list;
+        returnList.forEach((item) => {
+            delete item.id;
+        });
+        return returnList;
     }
 
     initAddButtonListener() {
@@ -58,9 +62,7 @@ export default class EditableList {
 
     sortList() {
         if (this.sortBy === 'date') {
-            this.list.sort((a, b) => {
-                return flatpickr.parseDate(a.date.split(' – ')[0], "d.m.Y") - flatpickr.parseDate(b.date.split(' – ')[0], "d.m.Y");
-            })
+            this.list.sort(flatpickrDateSort);
         }
     }
 
@@ -157,7 +159,13 @@ export default class EditableList {
     restoreFromList(list) {
         if (list.length > 0) {
             this.list = list;
-            this.id = list.reduce((local_max, el) => Math.max(local_max, parseInt(el.id)), 0) + 1;
+            let id = 0;
+            this.list.forEach((item) => {
+                item.id = id;
+                id++;
+            });
+            // this.id = list.reduce((local_max, el) => Math.max(local_max, parseInt(el.id)), 0) + 1;
+            this.id = id;
             this.rerenderTable();
         }
     }
