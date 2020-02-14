@@ -34,11 +34,20 @@ export function initialize(form) {
         });
     });
 
+    filePicker.addEventListener('change', e => {
+        const file = jsonInputEl.files[0];
+        processJson(file);
+    });
+
     filePicker.addEventListener('drop', e => {
         const droppedFile = e.dataTransfer.files[0];
-        if (droppedFile.type === 'application/json') {
+        processJson(droppedFile);
+    });
+
+    function processJson(file) {
+        if (file.type === 'application/json') {
             const reader = new FileReader();
-            reader.readAsText(droppedFile, "UTF-8");
+            reader.readAsText(file, "UTF-8");
             reader.addEventListener('load', e => {
                 const {result} = e.target;
                 const formObj = JSON.parse(result);
@@ -51,8 +60,7 @@ export function initialize(form) {
         } else {
             temporarilyChangeUploadText(4000, 'Błąd! Przyjmowane są tylko pliki .json, wygenerowane wcześniej przez planeo');
         }
-
-    });
+    }
 
     jsonInputEl.addEventListener('click', e => e.stopPropagation());
     filePicker.addEventListener('click', () => {
