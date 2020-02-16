@@ -27,6 +27,9 @@
             input[readonly].flatpickr {
                 background-color: white;
             }
+            .form-title {
+                font-size: 1.3rem;
+            }
         </style>
     </head>
     <body class="py-4">
@@ -67,31 +70,31 @@
 
                 <hr class="mb-4">
 
-                <div class="row">
-                    <div class="col-lg-6 mt-2">
-                        <div class="form-group d-flex">
-                            <label for="calendar_name" class="col-form-label text-nowrap">Nazwa kalendarza:</label>
-                            <div class="d-flex flex-column flex-grow-1 ml-2">
-                                <input id="calendar_name" type="text" class="form-control" placeholder="np. „Studia 2. semestr”" required disabled>
-                                <div class="invalid-feedback"></div>
-                            </div>
+                <div class="row my-4">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <legend class="col text-center form-title">Nazwa kalendarza</legend>
+                        </div>
+                        <div class="form-row">
+                            <input id="calendar_name" type="text" class="form-control" placeholder="np. „Studia 2. semestr”" required disabled>
                         </div>
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-sm-6 mb-2">
+
+
+                <div class="row mt-3 mb-4">
+                    <div class="col-sm-6 my-2">
                         <div class="row">
-                            <legend class="col text-center">Czas trwania I. połowy semestru</legend>
+                            <legend class="col text-center form-title">Czas trwania I. połowy semestru</legend>
                         </div>
                         <div class="form-row">
                             <input id="first_half" type="text" class="form-control flatpickr" placeholder="przedział czasowy" required disabled>
                             <div class="invalid-feedback"></div>
                         </div>
                     </div>
-                    <div class="col-sm-6 mb-2">
+                    <div class="col-sm-6 my-2">
                         <div class="row">
-                            <legend class="col text-center">Czas trwania II. połowy semestru</legend>
+                            <legend class="col text-center form-title">Czas trwania II. połowy semestru</legend>
                         </div>
                         <div class="form-row">
                             <input id="second_half" type="text" class="form-control flatpickr" placeholder="przedział czasowy" required disabled>
@@ -100,9 +103,8 @@
                     </div>
                 </div>
 
-                <hr>
 
-                <div class="form-group row mt-1">
+                <div class="form-group row my-5 mb-5">
                     <div class="col">
                         <div class="row">
                             <label class="col">Pierwszy tydzień, w którym odbywają się Twoje zajęcia, jest tygodniem:</label>
@@ -125,12 +127,11 @@
                     </div>
                 </div>
 
-                <hr>
 
-                <div class="form-group row mt-1">
+                <div class="form-group row my-4">
                     <div class="col">
                         <div class="row">
-                            <legend class="col text-center">Dni wolne od zajęć</legend>
+                            <legend class="col text-center form-title">Dni wolne od zajęć</legend>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-sm">
@@ -173,11 +174,12 @@
                         </table>
                     </div>
                 </div>
-                <hr>
-                <div class="form-group row mt-1">
+
+
+                <div class="form-group row my-4">
                     <div id="lesson_container" class="col">
                         <div class="row">
-                            <legend class="col text-center">Plan zajęć</legend>
+                            <legend class="col text-center form-title">Plan zajęć</legend>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-sm">
@@ -272,13 +274,15 @@
                         </table>
                     </div>
                 </div>
-                <hr>
+
                 <div class="form-group row text-center">
                     <div class="col-sm-12">
                         <button id="add_calendar" class="btn btn-success btn-lg" disabled>Dodaj do Kalendarza Google</button>
                     </div>
                 </div>
-                <hr>
+
+                <hr class="mt-5">
+
                 <div class="form-group row">
                     <div class="col">
                         <p class="text-center text-sm-left text-muted">Inne opcje:</p>
