@@ -44,10 +44,21 @@ If you want to run it on your own computer/server:
 1. clone the repo
 2. run `npm install` in the project directory
 3. cd into `dist` folder and run an http server, e.g.
+    ```
+    $ python3 -m http.server 8000
+    ```
+4. Run webpack with:
+    ```
+    npx webpack
+    ```
+    It will watch for changes in files and update bundle.js file automatically.
+    
+### Miscellaneous
+Additionally, you can expose your local webserver to the public using ngrok (for instance to test the app on a phone):
 ```
-$ python3 -m http.server 8000
+./ngrok http localhost:8000
 ```
-To generate the bundle.js, run webpack with:
+Updating gh-pages:
 ```
-webpack
+git subtree push --prefix dist origin gh-pages
 ```
