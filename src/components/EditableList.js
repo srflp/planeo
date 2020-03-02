@@ -1,5 +1,4 @@
-import flatpickr from "flatpickr";
-import {flatpickrDateSort, htmlToElement} from "../helpers";
+import {htmlToElement} from "../helpers";
 
 export default class EditableList {
     constructor(calendarList, config) {
@@ -12,7 +11,7 @@ export default class EditableList {
         this.itemsSelector = config.itemsSelector;
         this.itemsClassname = config.itemsSelector.substring(1);
         this.fields = config.fields;
-        this.sortBy = config.sortBy || '';
+        this.sortRules = config.sortRules || '';
         this.fields.forEach((field) => {
             field.el = document.querySelector(field.id);
         });
@@ -61,9 +60,15 @@ export default class EditableList {
     }
 
     sortList() {
-        if (this.sortBy === 'date') {
-            this.list.sort(flatpickrDateSort);
-        }
+        this.sortRules.forEach((rule) => {
+            if(rule.sortFunction) {
+                this.list.sort(rule.sortFunction);
+            } else {
+                this.list.sort((a, b) => {
+                    return a[rule.fieldName].localeCompare(b[rule.fieldName]); // compares two strings
+                });
+            }
+        });
     }
 
     clearInputs() {

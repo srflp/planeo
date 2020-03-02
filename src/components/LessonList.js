@@ -1,4 +1,5 @@
 import EditableList from "./EditableList";
+import {weekdaySort} from "../helpers";
 
 export default class LessonList extends EditableList {
     constructor(calendarList) {
@@ -7,6 +8,15 @@ export default class LessonList extends EditableList {
             formEl: '#lesson_form',
             addButton: '#add_lesson',
             itemsSelector: '.lesson',
+            sortRules: [
+                {
+                    fieldName: 'hour',
+                },
+                {
+                    fieldName: 'weekday',
+                    sortFunction: weekdaySort,
+                },
+            ],
             fields: [
                 {
                     id: '#lesson_weekday',

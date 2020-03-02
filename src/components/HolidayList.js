@@ -1,4 +1,5 @@
 import EditableList from "./EditableList";
+import {flatpickrDateSort} from "../helpers";
 
 export default class HolidayList extends EditableList {
     constructor(calendarList) {
@@ -7,7 +8,12 @@ export default class HolidayList extends EditableList {
             formEl: '#holiday_form',
             addButton: '#add_holiday',
             itemsSelector: '.holiday',
-            sortBy: 'date',
+            sortRules: [
+                {
+                    fieldName: 'date',
+                    sortFunction: flatpickrDateSort,
+                },
+            ],
             fields: [
                 {
                     id: '#holiday_date',

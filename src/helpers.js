@@ -23,3 +23,8 @@ export function flatpickrDateSort(a, b) {
     const dateB = flatpickr.parseDate(b.date.split(' – ')[0], "d.m.Y");
     return dateA - dateB;
 }
+
+export function weekdaySort(a, b) {
+    const weekdays = ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela'];
+    return weekdays.indexOf(a.weekday) - weekdays.indexOf(b.weekday);
+}
