@@ -4,7 +4,9 @@ import HolidayList from "./components/HolidayList";
 import LessonList from "./components/LessonList";
 import FileUpload from "./components/FileUpload";
 import DatePickers from "./components/DatePickers";
+import StatusBox from "./components/StatusBox";
 import {downloadObjectAsJson} from "./helpers";
+import addAndFillInCalendar from "./googleCalendar/main";
 
 loadjs.ready('gapi', function () {
     const googleApi = new GoogleAPI();
@@ -22,24 +24,6 @@ export function onLogin() {
     // })
     new Form();
 }
-
-
-class StatusBox {
-    setOperationStatus(status, loading = true) {
-        const statusBox = document.querySelector('#status_box');
-        const statusSpinner = document.querySelector('#status_spinner');
-        const statusBoxContent = document.querySelector('#status_box_content');
-        if (loading) {
-            statusSpinner.classList.remove('d-none');
-        } else {
-            statusSpinner.classList.add('d-none');
-        }
-        statusBox.classList.add('d-flex');
-        statusBox.classList.remove('d-none');
-        statusBoxContent.innerText = status;
-    }
-}
-
 
 // CLASSES
 class Form {
@@ -73,8 +57,8 @@ class Form {
         const addCalendarButton = document.querySelector('#add_calendar');
         addCalendarButton.addEventListener('click', (e) => {
             e.preventDefault();
-            this.getData();
-            // this.addCalendar(calendarName.value);
+            const data = this.getData();
+            this.addCalendar(data);
         });
     }
 
@@ -155,23 +139,7 @@ class Form {
         };
     }
 
-    addCalendar(name) {
-        setOperationStatus("Trwa dodawanie kalendarza...");
-        gapi.client.calendar.calendars.insert({
-            "summary": name
-        }).then((response) => {
-            calendarId = response.result.id;
-            setOperationStatus(`Kalendarz „${name}” został dodany`, false);
-        }, (error) => {
-            console.log(`Error: ${error.result.error.message} (HTTP code: ${error.result.error.code})`);
-        })
+    addCalendar(data) {
+        addAndFillInCalendar(data, this.statusBox);
     }
 }
-
-
-
-
-
-
-
-

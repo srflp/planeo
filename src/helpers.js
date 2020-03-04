@@ -24,7 +24,14 @@ export function flatpickrDateSort(a, b) {
     return dateA - dateB;
 }
 
+export const weekdays = ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela'];
+
 export function weekdaySort(a, b) {
-    const weekdays = ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela'];
     return weekdays.indexOf(a.weekday) - weekdays.indexOf(b.weekday);
+}
+
+export function addDays(date, days) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
 }
