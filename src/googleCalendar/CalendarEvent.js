@@ -1,15 +1,27 @@
+import dayjs from "dayjs"
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
 export default class CalendarEvent {
     constructor(event) {
         this.summary = event.name;
-        this.startDate = flatpickr.formatDate(event.startDate, 'Y-m-d'); // expects Date object
-        this.endDate = flatpickr.formatDate(event.endDate, 'Y-m-d');
-        this.allDay = event.allDay;
-        this.startHour = event.startHour || null; // expects string
-        this.endHour = event.endHour || null;
-
+        this.startDate = event.startDate.format('YYYY-MM-DD'); // expects Date object
+        this.endDate = event.endDate.format('YYYY-MM-DD');
+        this.allDay = event.allDay; // boolean
         if (!this.allDay) {
-            this.startDateTime = flatpickr.parseDate(this.startDate + ' ' + this.startHour, 'Y-m-d H:i').toISOString();
-            this.endDateTime = flatpickr.parseDate(this.endDate + ' ' + this.endHour, 'Y-m-d H:i').toISOString();
+            this.startDateTime = dayjs(this.startDate + ' ' + event.startHour, 'YYYY-MM-DD HH:mm').toISOString();
+            this.endDateTime = dayjs(this.endDate + ' ' + event.endHour, 'YYYY-MM-DD HH:mm').toISOString();
+        }
+        if (event.recurrence) {
+            this.recurrence = [
+                [
+                    'RRULE:FREQ=WEEKLY',
+                    'UNTIL=' + event.recurrence.endDate.format('YYYYMMDDTHHmmss[Z]'),
+                    'INTERVAL=' + event.recurrence.interval,
+                    'WKST=MO', // the week start date
+                    'BYDAY=' + event.recurrence.days.map(this.weekdayToRruleShortcut).join(','),
+                ].join(';'),
+            ];
         }
 
         this.location = event.location;
@@ -31,10 +43,26 @@ export default class CalendarEvent {
         if (this.allDay) {
             event.start.date = this.startDate;
             event.end.date = this.endDate;
+            event.transparency = 'transparent'; // equivalent to setting 'Show me as available' in calendar
         } else {
             event.start.dateTime = this.startDateTime;
             event.end.dateTime = this.endDateTime;
         }
+        if (this.recurrence) {
+            event.recurrence = this.recurrence;
+        }
         return event;
+    }
+
+    weekdayToRruleShortcut(weekday) {
+        return {
+            'poniedziałek': 'MO',
+            'wtorek': 'TU',
+            'środa': 'WE',
+            'czwartek': 'TH',
+            'piątek': 'FR',
+            'sobota': 'SA',
+            'niedziela': 'SU',
+        }[weekday];
     }
 }
