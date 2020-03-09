@@ -276,9 +276,19 @@
                     </div>
                 </div>
 
-                <div class="form-group row text-center">
+                <div class="form-group row text-center mb-4">
                     <div class="col-sm-12">
                         <button id="add_calendar" class="btn btn-success btn-lg" disabled>Dodaj do Kalendarza Google</button>
+                    </div>
+                </div>
+
+                <!--Status info-box-->
+                <div id="status_box" class="d-none justify-content-center"> <!--d-flex when shown-->
+                    <div class="alert alert-secondary">
+                        <div class="row">
+                            <div id="status_spinner" class="spinner-border mx-2" role="status"></div>
+                            <div id="status_box_content" class="align-self-center mx-2"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -299,15 +309,7 @@
 
             </form>
 
-            <!--Status info-box-->
-            <div id="status_box" class="d-none justify-content-center"> <!--d-flex when shown-->
-                <div class="alert alert-secondary">
-                    <div class="row">
-                        <div id="status_spinner" class="spinner-border mx-2" role="status"></div>
-                        <div id="status_box_content" class="align-self-center mx-2"></div>
-                    </div>
-                </div>
-            </div>
+
 
         </div>
 
