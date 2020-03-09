@@ -34,6 +34,8 @@ export default async function addAndFillInCalendar(data, statusBox) {
         await addLessons(calendarId, data, semesterStartDate, semesterEndDate);
 
         // TODO addHolidays
+        statusBox.setOperationStatus("Trwa dodawanie dni wolnych...");
+        await addHolidays(calendarId, data.holidays);
 
         // TODO removeLessonsOnHolidays
 
@@ -172,4 +174,23 @@ function isDateInRange(dateToCheck, dates) {
     return false;
 }
 
+async function addHolidays(calendarId, holidays) {
+    let pendingPromises = [];
+    for (let holiday of holidays) {
+        const holidayDate = holiday.date.split(' – ');
 
+        if (holidayDate.length === 1) {
+            holidayDate.push(holidayDate[0])
+        }
+
+        const event = new CalendarEvent({
+            name: holiday.name + ' (wolne)',
+            startDate: dayjs(holidayDate[0], 'DD.MM.YYYY'),
+            endDate: dayjs(holidayDate[1], 'DD.MM.YYYY'),
+            allDay: true,
+        });
+
+        pendingPromises.push(addEvent(calendarId, event));
+    }
+    await Promise.all(pendingPromises);
+}
