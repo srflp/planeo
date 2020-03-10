@@ -65,7 +65,6 @@ export function initialize(form) {
     jsonInputEl.addEventListener('click', e => e.stopPropagation());
     filePicker.addEventListener('click', () => {
         jsonInputEl.click();
-        console.log('click')
     });
 }
 

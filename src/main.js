@@ -108,7 +108,7 @@ class Form {
     load(formObj) {
         this.calendarName.value = formObj.calendarName;
         this.firstWeekIs.value = formObj.firstWeekIs;
-        if (formObj.firstWeekIs === 'parzysty') {
+        if (formObj.firstWeekIs === 'parzyste') {
             document.querySelector('#even_week').checked = true;
         } else {
             document.querySelector('#odd_week').checked = true;
