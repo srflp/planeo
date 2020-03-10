@@ -8,7 +8,6 @@ export default class StatusBox {
         } else {
             statusSpinner.classList.add('d-none');
         }
-        statusBox.classList.add('d-flex');
         statusBox.classList.remove('d-none');
         statusBoxContent.innerText = status;
     }
