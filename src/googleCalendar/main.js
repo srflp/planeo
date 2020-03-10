@@ -33,11 +33,8 @@ export default async function addAndFillInCalendar(data, statusBox) {
         statusBox.setOperationStatus("Trwa dodawanie zajęć...");
         await addLessons(calendarId, data, semesterStartDate, semesterEndDate);
 
-        // TODO addHolidays
         statusBox.setOperationStatus("Trwa dodawanie dni wolnych...");
         await addHolidays(calendarId, data.holidays);
-
-        // TODO removeLessonsOnHolidays
 
         statusBox.setOperationStatus(`Kalendarz „${data.calendarName}” został dodany`, false);
     } catch (error) {
@@ -117,6 +114,7 @@ async function addLessons(calendarId, data, semesterStartDate, semesterEndDate) 
                 endDate: semesterEndDate,
                 days: [lesson.weekday],
                 interval: interval,
+                exDates: getParsedHolidayDates(data.holidays),
             }
         });
 

@@ -29,9 +29,3 @@ export const weekdays = ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piąt
 export function weekdaySort(a, b) {
     return weekdays.indexOf(a.weekday) - weekdays.indexOf(b.weekday);
 }
-
-// export function addDays(date, days) {
-//     const result = new Date(date);
-//     result.setDate(result.getDate() + days);
-//     return result;
-// }
